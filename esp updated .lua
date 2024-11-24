@@ -9,6 +9,7 @@ local UIS = game:GetService("UserInputService")
 -- Variables
 local highlightEnabled = true
 local highlightInstances = {}
+local menuOpen = true
 
 -- Function to create the highlight menu
 local function createMenu()
@@ -16,12 +17,18 @@ local function createMenu()
     screenGui.Parent = PlayerGui
 
     local frame = Instance.new("Frame")
-    frame.Size = UDim2.new(0, 200, 0, 100)
-    frame.Position = UDim2.new(0.5, -100, 0.5, -50)
+    frame.Size = UDim2.new(0, 200, 0, 150)
+    frame.Position = UDim2.new(0.5, -100, 0.5, -75)
     frame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
     frame.BackgroundTransparency = 0.5
     frame.Parent = screenGui
 
+    -- UICorner for rounded corners
+    local corner = Instance.new("UICorner")
+    corner.CornerRadius = UDim.new(0, 12)  -- Rounded corners
+    corner.Parent = frame
+
+    -- Toggle Highlight Button
     local toggleButton = Instance.new("TextButton")
     toggleButton.Size = UDim2.new(0, 180, 0, 40)
     toggleButton.Position = UDim2.new(0, 10, 0, 10)
@@ -30,7 +37,22 @@ local function createMenu()
     toggleButton.BackgroundColor3 = Color3.fromRGB(0, 255, 0)
     toggleButton.Parent = frame
 
-    -- Button functionality
+    -- Close/Open Menu Button
+    local closeButton = Instance.new("TextButton")
+    closeButton.Size = UDim2.new(0, 180, 0, 40)
+    closeButton.Position = UDim2.new(0, 10, 0, 60)
+    closeButton.Text = "Close Menu"
+    closeButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+    closeButton.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+    closeButton.Parent = frame
+
+    -- UICorner for the buttons (optional, to make them rounded)
+    local buttonCorner = Instance.new("UICorner")
+    buttonCorner.CornerRadius = UDim.new(0, 8)
+    buttonCorner.Parent = toggleButton
+    buttonCorner.Parent = closeButton
+
+    -- Button functionality to toggle highlight
     toggleButton.MouseButton1Click:Connect(function()
         highlightEnabled = not highlightEnabled
         if highlightEnabled then
@@ -42,6 +64,18 @@ local function createMenu()
             toggleButton.BackgroundColor3 = Color3.fromRGB(0, 255, 0)
             disableHighlighting()
         end
+    end)
+
+    -- Button functionality to close/open the menu
+    closeButton.MouseButton1Click:Connect(function()
+        if menuOpen then
+            frame.Visible = false
+            closeButton.Text = "Open Menu"
+        else
+            frame.Visible = true
+            closeButton.Text = "Close Menu"
+        end
+        menuOpen = not menuOpen
     end)
 end
 
